@@ -26,8 +26,8 @@ def read_wav(wav_file):
 def compute_chunk_features(mp3_file):
     """Return feature vectors for two chunks of an MP3 file."""
     # Extract MP3 file to a mono, 10kHz WAV file
-    mpg123_command = 'D:\Softwares\Audio_Video_Tools\mpg123-1.22.0-x86-64\
-                      mpg123-1.12.3-x86-64mpg123.exe -w "%s" -r 10000 -m "%s"'
+    mpg123_command = ('D:\Softwares\Audio_Video_Tools\mpg123-1.22.0-x86-64'
+                      '\mpg123.exe -w "%s" -r 10000 -m "%s"')
     out_file = 'temp.wav'
     cmd = mpg123_command % (out_file, mp3_file)
     temp = subprocess.call(cmd)
@@ -42,7 +42,8 @@ def compute_chunk_features(mp3_file):
 
 def main():
     #TODO: initialize database
-
+    conn = sqlite3.connect("music_feature.db")
+    db_cur = conn.cursor()
     for path, dirs, files in os.walk('D:/Music/'):
         for f in files:
             if not f.endswith('.mp3'):
@@ -60,10 +61,13 @@ def main():
             # from the raw sound data.
             try:
                 feature_vec1, feature_vec2 = compute_chunk_features(mp3_file)
-                #TODO: write to database
+                #TODO: write to database. feature_vec1 & feature_vec2 are list of 42 length
+                db_cur.execute("INSERT INTO features VALUES '"+track+"','"+path+"','"+feature_vec1+"','"+feature_vec2+"';")
+                conn.commit()
             except:
                 continue
 
     #TODO: close database
+    conn.close()
 if __name__=="__main__":
     main()
