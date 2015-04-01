@@ -5,7 +5,6 @@ import subprocess
 import wave
 import struct
 import numpy
-import csv
 import sys
 import os
 import FeatureExtraction
@@ -44,7 +43,7 @@ def compute_chunk_features(mp3_file):
 def main():
     #TODO: initialize database
 
-    for path, dirs, files in os.walk('C:/Users/Christian/Music/'):
+    for path, dirs, files in os.walk('D:/Music/'):
         for f in files:
             if not f.endswith('.mp3'):
                 # Skip any non-MP3 files
